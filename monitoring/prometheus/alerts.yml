@@ -1,0 +1,87 @@
+groups:
+  - name: disaster-response-alerts
+    interval: 30s
+    rules:
+      # API availability
+      - alert: BackendDown
+        expr: up{job="disaster-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disaster Response Backend is down"
+          description: "The backend API has been unreachable for more than 1 minute."
+
+      # High error rate
+      - alert: HighErrorRate
+        expr: |
+          rate(http_request_duration_seconds_count{status_code=~"5.."}[5m])
+          / rate(http_request_duration_seconds_count[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High HTTP error rate (> 5%)"
+          description: "Error rate is {{ $value | humanizePercentage }} on {{ $labels.route }}"
+
+      # Slow requests
+      - alert: SlowRequests
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Slow API requests (p95 > 2s)"
+          description: "95th percentile request latency is {{ $value }}s"
+
+      # Pod restarts
+      - alert: PodCrashLooping
+        expr: rate(kube_pod_container_status_restarts_total[15m]) * 60 * 5 > 5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pod {{ $labels.pod }} is crash looping"
+
+      # High CPU
+      - alert: HighCPUUsage
+        expr: |
+          100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value | humanize }}%"
+
+      # High memory
+      - alert: HighMemoryUsage
+        expr: |
+          (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)
+          / node_memory_MemTotal_bytes * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanize }}%"
+
+      # Disk space
+      - alert: DiskSpaceLow
+        expr: |
+          (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 15
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+
+      # Active incidents spike
+      - alert: IncidentSpike
+        expr: disaster_active_incidents_total > 20
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High number of active incidents ({{ $value }})"

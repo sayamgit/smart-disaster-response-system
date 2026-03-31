@@ -1,0 +1,207 @@
+version: '3.8'
+
+services:
+  # ── Databases ──────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: disaster-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: disaster_db
+      POSTGRES_USER: disaster_user
+      POSTGRES_PASSWORD: DisasterPass123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U disaster_user -d disaster_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - disaster-net
+
+  mongodb:
+    image: mongo:7-jammy
+    container_name: disaster-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: disaster_logs
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - disaster-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: disaster-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - disaster-net
+
+  # ── Application ────────────────────────────────────────
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: production
+    container_name: disaster-backend
+    restart: unless-stopped
+    depends_on:
+      postgres: { condition: service_healthy }
+      mongodb:  { condition: service_healthy }
+      redis:    { condition: service_healthy }
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: disaster_db
+      POSTGRES_USER: disaster_user
+      POSTGRES_PASSWORD: DisasterPass123
+      MONGO_URI: mongodb://mongodb:27017/disaster_logs
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: change-me-in-production-32chars-min
+      JWT_EXPIRES_IN: 7d
+      JWT_REFRESH_SECRET: change-me-refresh-secret-32chars
+      FRONTEND_URL: http://localhost:3000
+      ELASTICSEARCH_NODE: http://elasticsearch:9200
+    ports:
+      - "5000:5000"
+    volumes:
+      - uploads_data:/app/uploads
+      - logs_data:/app/logs
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - disaster-net
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: disaster-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    networks:
+      - disaster-net
+
+  # ── Monitoring ─────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: disaster-prometheus
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+    volumes:
+      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - disaster-net
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: disaster-grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin123
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ../monitoring/grafana:/etc/grafana/provisioning:ro
+    ports:
+      - "3001:3000"
+    networks:
+      - disaster-net
+
+  # ── ELK Stack ──────────────────────────────────────────
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: disaster-elasticsearch
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - disaster-net
+
+  logstash:
+    image: logstash:8.11.0
+    container_name: disaster-logstash
+    restart: unless-stopped
+    depends_on:
+      elasticsearch: { condition: service_healthy }
+    volumes:
+      - ../logging/logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5044:5044"
+    networks:
+      - disaster-net
+
+  kibana:
+    image: kibana:8.11.0
+    container_name: disaster-kibana
+    restart: unless-stopped
+    depends_on:
+      elasticsearch: { condition: service_healthy }
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - disaster-net
+
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+  elasticsearch_data:
+  uploads_data:
+  logs_data:
+
+networks:
+  disaster-net:
+    driver: bridge

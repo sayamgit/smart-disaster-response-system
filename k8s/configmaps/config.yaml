@@ -1,0 +1,44 @@
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: disaster-response
+  labels:
+    app: disaster-response
+    environment: production
+
+---
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: disaster-config
+  namespace: disaster-response
+data:
+  NODE_ENV: "production"
+  PORT: "5000"
+  POSTGRES_HOST: "postgres-service"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "disaster_db"
+  MONGO_URI: "mongodb://mongodb-service:27017/disaster_logs"
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  FRONTEND_URL: "https://disaster.yourdomain.com"
+  ELASTICSEARCH_NODE: "http://elasticsearch-service:9200"
+  LOG_LEVEL: "info"
+
+---
+# Secret (base64 encoded values — replace before deploy)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: disaster-secrets
+  namespace: disaster-response
+type: Opaque
+stringData:
+  POSTGRES_USER: "disaster_user"
+  POSTGRES_PASSWORD: "StrongProductionPassword123!"
+  JWT_SECRET: "production-jwt-secret-min-32-chars-replace-me"
+  JWT_REFRESH_SECRET: "production-refresh-secret-32chars"
+  REDIS_PASSWORD: ""
