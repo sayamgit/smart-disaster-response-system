@@ -11,9 +11,12 @@ services:
     env: node
     plan: free
     region: oregon 
-    buildCommand: "cd backend && npm install"
-    startCommand: "cd backend && npm start"
+    rootDir: backend
+    buildCommand: "npm install"
+    startCommand: "npm start"
     envVars:
+      - key: NODE_VERSION
+        value: 20
       - key: DATABASE_URL
         fromDatabase:
           name: disaster-db
@@ -27,8 +30,9 @@ services:
   - type: web
     name: disaster-frontend
     env: static
-    buildCommand: "cd frontend && npm install && npm run build"
-    staticPublishPath: "./frontend/build"
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: "./build"
     # Route all 404s back to index.html to support React Router
     routes:
       - type: rewrite
