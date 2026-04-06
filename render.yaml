@@ -28,7 +28,6 @@ services:
     name: disaster-frontend
     env: static
     plan: free
-    region: oregon
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: "./frontend/build"
     # Route all 404s back to index.html to support React Router
