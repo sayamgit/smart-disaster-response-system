@@ -13,19 +13,19 @@ const URG_STYLE  = {
 };
 
 function AllocationLog({ log }) {
-  if (!log.length) return <p className="text-gray-500 text-sm py-4 text-center">No allocations yet today</p>;
+  if (!log.length) return <p className="text-surface-500 dark:text-gray-500 text-sm py-4 text-center">No allocations yet today</p>;
   return (
     <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
       {log.map((entry, i) => (
-        <div key={i} className="flex items-center gap-3 p-2.5 bg-surface-700 rounded-lg">
+        <div key={i} className="flex items-center gap-3 p-2.5 bg-surface-50 dark:bg-surface-700 rounded-lg">
           <div className={`w-2 h-2 rounded-full flex-shrink-0 ${entry.success ? 'bg-green-400' : 'bg-red-400'}`} />
           <div className="flex-1 min-w-0">
-            <p className="text-white text-xs font-medium">
+            <p className="text-surface-900 dark:text-white text-xs font-medium">
               {entry.qty} × {TYPE_ICON[entry.resource_type] || '📦'} {entry.resource_name}
             </p>
-            <p className="text-gray-400 text-xs">→ {entry.destination}</p>
+            <p className="text-surface-500 dark:text-gray-400 text-xs">→ {entry.destination}</p>
           </div>
-          <span className="text-gray-500 text-xs flex-shrink-0">{entry.time}</span>
+          <span className="text-surface-500 dark:text-gray-500 text-xs flex-shrink-0">{entry.time}</span>
         </div>
       ))}
     </div>
@@ -178,10 +178,10 @@ export default function ResourceAllocationPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2">
             <Package size={20} className="text-primary-400" /> Resource Allocation
           </h1>
-          <p className="text-gray-400 text-sm">
+          <p className="text-surface-500 dark:text-gray-400 text-sm">
             {needsList.length} pending needs · {resources.length} resource types available
           </p>
         </div>
@@ -191,34 +191,34 @@ export default function ResourceAllocationPage() {
       </div>
 
       {/* Summary stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="card text-center"><p className="text-2xl font-bold text-white">{needsList.length}</p><p className="text-gray-400 text-xs mt-1">Pending needs</p></div>
-        <div className="card text-center"><p className="text-2xl font-bold text-red-400">{criticalNeeds}</p><p className="text-gray-400 text-xs mt-1">Critical</p></div>
-        <div className="card text-center"><p className="text-2xl font-bold text-green-400">{resources.length}</p><p className="text-gray-400 text-xs mt-1">Resource types</p></div>
-        <div className="card text-center"><p className="text-2xl font-bold text-primary-400">{totalAvail.toLocaleString()}</p><p className="text-gray-400 text-xs mt-1">Total units</p></div>
+      <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 md:grid-cols-4 gap-3">
+        <div className="card text-center"><p className="text-2xl font-bold text-surface-900 dark:text-white">{needsList.length}</p><p className="text-surface-500 dark:text-gray-400 text-xs mt-1">Pending needs</p></div>
+        <div className="card text-center"><p className="text-2xl font-bold text-red-400">{criticalNeeds}</p><p className="text-surface-500 dark:text-gray-400 text-xs mt-1">Critical</p></div>
+        <div className="card text-center"><p className="text-2xl font-bold text-green-400">{resources.length}</p><p className="text-surface-500 dark:text-gray-400 text-xs mt-1">Resource types</p></div>
+        <div className="card text-center"><p className="text-2xl font-bold text-primary-400">{totalAvail.toLocaleString()}</p><p className="text-surface-500 dark:text-gray-400 text-xs mt-1">Total units</p></div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
         {/* Left: Inventory */}
         <div className="card space-y-3">
-          <h3 className="text-white font-semibold text-sm">Available inventory</h3>
+          <h3 className="text-surface-900 dark:text-white font-semibold text-sm">Available inventory</h3>
           {loading ? (
             <div className="flex justify-center py-8"><RefreshCw size={18} className="animate-spin text-primary-400" /></div>
           ) : resources.length === 0 ? (
-            <p className="text-gray-500 text-sm text-center py-6">No resources available</p>
+            <p className="text-surface-500 dark:text-gray-500 text-sm text-center py-6">No resources available</p>
           ) : (
             <div className="space-y-2">
               {resources.map(r => (
-                <div key={r.id} className="flex items-center gap-3 p-3 bg-surface-700 rounded-xl">
+                <div key={r.id} className="flex items-center gap-3 p-3 bg-surface-50 dark:bg-surface-700 rounded-xl">
                   <span className="text-xl flex-shrink-0">{TYPE_ICON[r.type] || '📦'}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white text-xs font-medium truncate">{r.name}</p>
-                    <p className="text-gray-500 text-xs capitalize">{r.type?.replace('_',' ')}</p>
+                    <p className="text-surface-900 dark:text-white text-xs font-medium truncate">{r.name}</p>
+                    <p className="text-surface-500 dark:text-gray-500 text-xs capitalize">{r.type?.replace('_',' ')}</p>
                   </div>
                   <div className="text-right flex-shrink-0">
                     <p className="text-green-400 text-sm font-bold">{r.quantity.toLocaleString()}</p>
-                    <p className="text-gray-500 text-xs">{r.unit || 'units'}</p>
+                    <p className="text-surface-500 dark:text-gray-500 text-xs">{r.unit || 'units'}</p>
                   </div>
                 </div>
               ))}
@@ -228,7 +228,7 @@ export default function ResourceAllocationPage() {
 
         {/* Middle: Needs */}
         <div className="card lg:col-span-2 space-y-3">
-          <h3 className="text-white font-semibold text-sm flex items-center gap-2">
+          <h3 className="text-surface-900 dark:text-white font-semibold text-sm flex items-center gap-2">
             People in need
             {criticalNeeds > 0 && (
               <span className="text-xs bg-red-900/40 text-red-400 px-2 py-0.5 rounded-full">
@@ -242,8 +242,8 @@ export default function ResourceAllocationPage() {
           ) : needsList.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <CheckCircle size={32} className="text-green-400 mb-3" />
-              <p className="text-white font-semibold">All needs have been addressed!</p>
-              <p className="text-gray-400 text-sm mt-1">No pending help requests or critical incidents.</p>
+              <p className="text-surface-900 dark:text-white font-semibold">All needs have been addressed!</p>
+              <p className="text-surface-500 dark:text-gray-400 text-sm mt-1">No pending help requests or critical incidents.</p>
             </div>
           ) : (
             <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
@@ -256,10 +256,10 @@ export default function ResourceAllocationPage() {
                     {/* Need header */}
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm font-medium truncate">{need.title}</p>
-                        <p className="text-gray-400 text-xs mt-0.5">📍 {need.location}</p>
+                        <p className="text-surface-900 dark:text-white text-sm font-medium truncate">{need.title}</p>
+                        <p className="text-surface-500 dark:text-gray-400 text-xs mt-0.5">📍 {need.location}</p>
                         {need.affected > 0 && (
-                          <p className="text-gray-400 text-xs">👥 {need.affected.toLocaleString()} affected</p>
+                          <p className="text-surface-500 dark:text-gray-400 text-xs">👥 {need.affected.toLocaleString()} affected</p>
                         )}
                       </div>
                       <div className="flex flex-col items-end gap-1 flex-shrink-0">
@@ -278,7 +278,7 @@ export default function ResourceAllocationPage() {
                     {/* Suggested needs */}
                     <div className="flex gap-1.5 flex-wrap mb-3">
                       {need.needs.slice(0, 4).map(n => (
-                        <span key={n} className="text-xs bg-surface-600 text-gray-300 px-2 py-0.5 rounded capitalize">
+                        <span key={n} className="text-xs bg-surface-200 dark:bg-surface-600 text-surface-900 dark:text-gray-300 px-2 py-0.5 rounded capitalize">
                           {TYPE_ICON[n] || '📦'} {n.replace('_',' ')}
                         </span>
                       ))}
@@ -287,7 +287,7 @@ export default function ResourceAllocationPage() {
                     {/* Allocation controls */}
                     <div className="flex gap-2 flex-wrap sm:flex-nowrap">
                       <select
-                        className="flex-1 min-w-0 text-xs bg-surface-800 border border-surface-600 rounded-lg px-2 py-1.5 text-gray-300 outline-none focus:border-primary-500"
+                        className="flex-1 min-w-0 text-xs bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-600 rounded-lg px-2 py-1.5 text-surface-600 dark:text-gray-300 outline-none focus:border-primary-500"
                         value={sel.resource_id || ''}
                         onChange={e => setSelection(need.id, 'resource_id', e.target.value)}
                       >
@@ -302,7 +302,7 @@ export default function ResourceAllocationPage() {
                         type="number"
                         min="1"
                         placeholder="Qty"
-                        className="w-16 text-xs bg-surface-800 border border-surface-600 rounded-lg px-2 py-1.5 text-gray-300 outline-none focus:border-primary-500 text-center"
+                        className="w-16 text-xs bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-600 rounded-lg px-2 py-1.5 text-surface-600 dark:text-gray-300 outline-none focus:border-primary-500 text-center"
                         value={sel.qty || ''}
                         onChange={e => setSelection(need.id, 'qty', e.target.value)}
                       />
@@ -326,8 +326,8 @@ export default function ResourceAllocationPage() {
 
       {/* Allocation log */}
       <div className="card">
-        <h3 className="text-white font-semibold text-sm mb-3 flex items-center gap-2">
-          <Clock size={14} className="text-gray-400" /> Allocation log — this session
+        <h3 className="text-surface-900 dark:text-white font-semibold text-sm mb-3 flex items-center gap-2">
+          <Clock size={14} className="text-surface-500 dark:text-gray-400" /> Allocation log — this session
         </h3>
         <AllocationLog log={allocLog} />
       </div>

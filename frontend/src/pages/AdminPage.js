@@ -36,23 +36,23 @@ export default function AdminPage() {
     } catch (e) { toast.error('Failed to update user'); }
   };
 
-  const ROLE_BADGE = { admin: 'bg-red-900/40 text-red-400 border border-red-700', volunteer: 'bg-blue-900/40 text-blue-400 border border-blue-700', citizen: 'bg-surface-600 text-gray-300' };
+  const ROLE_BADGE = { admin: 'bg-red-900/40 text-red-400 border border-red-700', volunteer: 'bg-blue-900/40 text-blue-400 border border-blue-700', citizen: 'bg-surface-200 dark:bg-surface-600 text-surface-900 dark:text-gray-300' };
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white flex items-center gap-2"><Shield size={20} className="text-danger-400" /> Admin Panel</h1>
-          <p className="text-gray-400 text-sm">System management and monitoring</p>
+          <h1 className="text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2"><Shield size={20} className="text-danger-400" /> Admin Panel</h1>
+          <p className="text-surface-500 dark:text-gray-400 text-sm">System management and monitoring</p>
         </div>
         <button onClick={fetch} className="btn-secondary"><RefreshCw size={15} /></button>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-surface-700 pb-1">
+      <div className="flex gap-2 border-b border-surface-200 dark:border-surface-700 pb-1">
         {['users', 'stats', 'logs'].map(t => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm capitalize rounded-t-lg transition-all ${tab === t ? 'text-white border-b-2 border-primary-400' : 'text-gray-400 hover:text-white'}`}>
+            className={`px-4 py-2 text-sm capitalize rounded-t-lg transition-all ${tab === t ? 'text-surface-900 dark:text-white border-b-2 border-primary-400' : 'text-surface-500 dark:text-gray-400 hover:text-surface-900 dark:text-white'}`}>
             {t}
           </button>
         ))}
@@ -68,13 +68,13 @@ export default function AdminPage() {
                   <tr key={u.id}>
                     <td>
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-primary-700 flex items-center justify-center text-white text-xs font-bold">{u.name?.charAt(0)}</div>
-                        <div><p className="text-white text-sm">{u.name}</p><p className="text-gray-500 text-xs">{u.email}</p></div>
+                        <div className="w-8 h-8 rounded-full bg-primary-700 flex items-center justify-center text-surface-900 dark:text-white text-xs font-bold">{u.name?.charAt(0)}</div>
+                        <div><p className="text-surface-900 dark:text-white text-sm">{u.name}</p><p className="text-surface-500 dark:text-gray-500 text-xs">{u.email}</p></div>
                       </div>
                     </td>
                     <td><span className={`badge capitalize ${ROLE_BADGE[u.role]}`}>{u.role}</span></td>
                     <td><span className={`badge ${u.is_active ? 'badge-low' : 'badge-critical'}`}>{u.is_active ? 'Active' : 'Inactive'}</span></td>
-                    <td className="text-gray-500 text-xs">{u.last_login ? formatDistanceToNow(new Date(u.last_login), { addSuffix: true }) : 'Never'}</td>
+                    <td className="text-surface-500 dark:text-gray-500 text-xs">{u.last_login ? formatDistanceToNow(new Date(u.last_login), { addSuffix: true }) : 'Never'}</td>
                     <td>
                       <button onClick={() => toggleUser(u.id, u.is_active)}
                         className={`flex items-center gap-1 text-xs px-2 py-1 rounded-lg transition-colors ${u.is_active ? 'text-red-400 hover:bg-red-900/30' : 'text-green-400 hover:bg-green-900/30'}`}>
@@ -90,14 +90,14 @@ export default function AdminPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {stats && Object.entries(stats).map(([key, rows]) => (
               <div key={key} className="card">
-                <h3 className="text-white font-semibold mb-3 capitalize">{key.replace('_', ' ')}</h3>
+                <h3 className="text-surface-900 dark:text-white font-semibold mb-3 capitalize">{key.replace('_', ' ')}</h3>
                 <div className="space-y-2">
                   {rows?.map((row, i) => {
                     const [k, v] = Object.entries(row);
                     return (
                       <div key={i} className="flex justify-between text-sm">
-                        <span className="text-gray-400 capitalize">{Object.values(row)[0]?.toString().replace('_', ' ')}</span>
-                        <span className="text-white font-medium">{Object.values(row)[1]}</span>
+                        <span className="text-surface-500 dark:text-gray-400 capitalize">{Object.values(row)[0]?.toString().replace('_', ' ')}</span>
+                        <span className="text-surface-900 dark:text-white font-medium">{Object.values(row)[1]}</span>
                       </div>
                     );
                   })}
@@ -107,15 +107,15 @@ export default function AdminPage() {
           </div>
         ) : (
           <div className="card space-y-2">
-            <h3 className="text-white font-semibold mb-2">Recent Event Logs</h3>
+            <h3 className="text-surface-900 dark:text-white font-semibold mb-2">Recent Event Logs</h3>
             {logs.slice(0, 30).map((log, i) => (
-              <div key={i} className="flex items-start gap-3 p-2 rounded-lg hover:bg-surface-700 transition-colors">
+              <div key={i} className="flex items-start gap-3 p-2 rounded-lg hover:bg-surface-50 dark:bg-surface-700 transition-colors">
                 <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${log.success ? 'bg-green-400' : 'bg-red-400'}`} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-gray-300 text-xs">{log.description}</p>
-                  <p className="text-gray-500 text-xs mt-0.5">{log.actor_role} · {formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}</p>
+                  <p className="text-surface-600 dark:text-gray-300 text-xs">{log.description}</p>
+                  <p className="text-surface-500 dark:text-gray-500 text-xs mt-0.5">{log.actor_role} · {formatDistanceToNow(new Date(log.createdAt), { addSuffix: true })}</p>
                 </div>
-                <span className="text-xs bg-surface-600 text-gray-400 px-1.5 py-0.5 rounded flex-shrink-0">{log.event_type}</span>
+                <span className="text-xs bg-surface-200 dark:bg-surface-600 text-surface-900 dark:text-gray-400 px-1.5 py-0.5 rounded flex-shrink-0">{log.event_type}</span>
               </div>
             ))}
           </div>

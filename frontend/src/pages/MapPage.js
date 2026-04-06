@@ -154,8 +154,8 @@ export default function MapPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-bold text-white">Disaster Risk Map</h1>
-          <p className="text-gray-400 text-sm mt-0.5">
+          <h1 className="text-xl font-bold text-surface-900 dark:text-white">Disaster Risk Map</h1>
+          <p className="text-surface-500 dark:text-gray-400 text-sm mt-0.5">
             {locating ? 'Detecting your location...' : roleLabel}
           </p>
         </div>
@@ -168,7 +168,7 @@ export default function MapPage() {
             <button key={key}
               onClick={() => setLayers(l => ({ ...l, [key]:!l[key] }))}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all
-                ${layers[key] ? 'bg-surface-700 border-surface-500 text-white' : 'bg-surface-800 border-surface-700 text-gray-500'}`}>
+                ${layers[key] ? 'bg-surface-50 dark:bg-surface-700 border-surface-500 text-surface-900 dark:text-white' : 'bg-white dark:bg-surface-800 border-surface-200 dark:border-surface-700 text-surface-500 dark:text-gray-500'}`}>
               <span className={`w-2 h-2 rounded-full ${color}`} />
               {label}
             </button>
@@ -177,13 +177,13 @@ export default function MapPage() {
       </div>
 
       {/* Counts bar */}
-      <div className="flex gap-4 text-xs text-gray-400 flex-wrap">
-        <span className="text-white">{visiblePredictions.length} risk zones</span>
+      <div className="flex gap-4 text-xs text-surface-500 dark:text-gray-400 flex-wrap">
+        <span className="text-surface-900 dark:text-white">{visiblePredictions.length} risk zones</span>
         <span>·</span>
-        <span className="text-white">{visibleIncidents.length} incidents</span>
+        <span className="text-surface-900 dark:text-white">{visibleIncidents.length} incidents</span>
         <span>·</span>
-        <span className="text-white">{visibleShelters.length} shelters</span>
-        {radius && <span className="text-gray-500">within {radius} km</span>}
+        <span className="text-surface-900 dark:text-white">{visibleShelters.length} shelters</span>
+        {radius && <span className="text-surface-500 dark:text-gray-500">within {radius} km</span>}
         <div className="ml-auto flex flex-wrap gap-3">
           {Object.entries(RISK_COLOR).map(([level, color]) => (
             <div key={level} className="flex items-center gap-1.5">
@@ -196,14 +196,14 @@ export default function MapPage() {
 
       {/* Map */}
       {(loading || locating) ? (
-        <div className="bg-surface-800 rounded-xl border border-surface-700 flex items-center justify-center" style={{ height:500 }}>
+        <div className="bg-white dark:bg-surface-800 rounded-xl border border-surface-200 dark:border-surface-700 flex items-center justify-center" style={{ height:500 }}>
           <div className="text-center">
             <RefreshCw size={24} className="animate-spin text-primary-400 mx-auto mb-2" />
-            <p className="text-gray-400 text-sm">{locating ? 'Getting your location...' : 'Loading map...'}</p>
+            <p className="text-surface-500 dark:text-gray-400 text-sm">{locating ? 'Getting your location...' : 'Loading map...'}</p>
           </div>
         </div>
       ) : (
-        <div className="rounded-xl overflow-hidden border border-surface-700" style={{ height:500 }}>
+        <div className="rounded-xl overflow-hidden border border-surface-200 dark:border-surface-700" style={{ height:500 }}>
           <MapContainer center={mapCenter} zoom={mapZoom} style={{ height:'100%', width:'100%' }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
 
@@ -215,7 +215,7 @@ export default function MapPage() {
               <Marker position={userPos} icon={userIcon}>
                 <Popup>
                   <p className="font-bold text-sm">📍 Your location</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{userPos[0].toFixed(5)}, {userPos[1].toFixed(5)}</p>
+                  <p className="text-xs text-surface-500 dark:text-gray-400 mt-0.5">{userPos[0].toFixed(5)}, {userPos[1].toFixed(5)}</p>
                   {radius && <p className="text-xs text-blue-500 mt-1">Showing {radius} km radius</p>}
                 </Popup>
               </Marker>
@@ -234,8 +234,8 @@ export default function MapPage() {
                       <span className="font-bold text-sm capitalize">{p.risk_level} risk</span>
                     </div>
                     <p className="font-medium text-sm">{p.region_name || 'Unknown area'}</p>
-                    <p className="text-xs text-gray-500 capitalize">Type: {p.disaster_type}</p>
-                    <p className="text-xs text-gray-500">Probability: {(parseFloat(p.probability)*100).toFixed(0)}%</p>
+                    <p className="text-xs text-surface-500 dark:text-gray-500 capitalize">Type: {p.disaster_type}</p>
+                    <p className="text-xs text-surface-500 dark:text-gray-500">Probability: {(parseFloat(p.probability)*100).toFixed(0)}%</p>
                   </div>
                 </Popup>
               </CircleMarker>
@@ -249,13 +249,13 @@ export default function MapPage() {
                 <Popup>
                   <div className="min-w-40 p-1">
                     <p className="font-bold text-sm">{inc.title}</p>
-                    <p className="text-xs text-gray-500 capitalize">{inc.type} · {inc.severity} · {inc.status?.replace('_',' ')}</p>
+                    <p className="text-xs text-surface-500 dark:text-gray-500 capitalize">{inc.type} · {inc.severity} · {inc.status?.replace('_',' ')}</p>
                     {inc.location_name && <p className="text-xs mt-1">📍 {inc.location_name}</p>}
                     {inc.affected_count > 0 && <p className="text-xs text-red-500">👥 {inc.affected_count.toLocaleString()} affected</p>}
                     {/* Volunteer-specific: accept task button */}
                     {role === 'volunteer' && inc.status === 'open' && (
                       <button onClick={() => api.post(`/volunteers/accept-task/${inc.id}`).then(() => toast.success('Task accepted!')).catch(() => toast.error('Failed'))}
-                        className="mt-2 w-full text-xs bg-primary-600 text-white rounded px-2 py-1">
+                        className="mt-2 w-full text-xs bg-primary-600 text-surface-900 dark:text-white rounded px-2 py-1">
                         Accept this task
                       </button>
                     )}
@@ -272,7 +272,7 @@ export default function MapPage() {
                 <Popup>
                   <div className="min-w-40 p-1">
                     <p className="font-bold text-sm">⛺ {s.name}</p>
-                    <p className="text-xs text-gray-500">{s.address}</p>
+                    <p className="text-xs text-surface-500 dark:text-gray-500">{s.address}</p>
                     <div className="mt-2 text-xs space-y-0.5">
                       <div className="flex justify-between"><span>Capacity:</span><span className="font-medium">{s.capacity}</span></div>
                       <div className="flex justify-between"><span>Free beds:</span><span className={`font-medium ${s.current_occupancy/s.capacity>0.8?'text-red-500':'text-green-600'}`}>{s.capacity - s.current_occupancy}</span></div>

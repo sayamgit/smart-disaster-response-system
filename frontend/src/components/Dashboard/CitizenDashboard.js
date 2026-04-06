@@ -85,8 +85,8 @@ export default function CitizenDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white">Hello, {user?.name?.split(' ')[0]} 👋</h1>
-          <p className="text-gray-400 text-sm mt-0.5">Stay safe — help is available 24/7</p>
+          <h1 className="text-xl font-bold text-surface-900 dark:text-white">Hello, {user?.name?.split(' ')[0]} 👋</h1>
+          <p className="text-surface-500 dark:text-gray-400 text-sm mt-0.5">Stay safe — help is available 24/7</p>
         </div>
         <button onClick={() => navigate('/safety')} className="btn-secondary text-sm">
           <Shield size={14} /> Safety Tips
@@ -97,11 +97,11 @@ export default function CitizenDashboard() {
       <div className="card border-primary-600 bg-primary-900/20">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center flex-shrink-0">
-            <Heart size={17} className="text-white" />
+            <Heart size={17} className="text-surface-900 dark:text-white" />
           </div>
           <div>
-            <h2 className="text-white font-bold text-base">Request Help</h2>
-            <p className="text-gray-400 text-xs">Submit your request and a volunteer will be assigned to you</p>
+            <h2 className="text-surface-900 dark:text-white font-bold text-base">Request Help</h2>
+            <p className="text-surface-500 dark:text-gray-400 text-xs">Submit your request and a volunteer will be assigned to you</p>
           </div>
         </div>
 
@@ -111,8 +111,8 @@ export default function CitizenDashboard() {
             <div className="w-14 h-14 rounded-full bg-green-900/40 border border-green-700 flex items-center justify-center mx-auto mb-3">
               <CheckCircle size={28} className="text-green-400" />
             </div>
-            <p className="text-white font-semibold text-lg">Request Submitted!</p>
-            <p className="text-gray-400 text-sm mt-1 mb-4">A volunteer near you has been notified and will respond shortly.</p>
+            <p className="text-surface-900 dark:text-white font-semibold text-lg">Request Submitted!</p>
+            <p className="text-surface-500 dark:text-gray-400 text-sm mt-1 mb-4">A volunteer near you has been notified and will respond shortly.</p>
             <div className="flex gap-3 justify-center">
               <button onClick={resetForm} className="btn-secondary text-sm">Submit Another</button>
               <button onClick={() => navigate('/help-requests')} className="btn-primary text-sm">Track My Requests</button>
@@ -121,16 +121,16 @@ export default function CitizenDashboard() {
         ) : (
           <form onSubmit={submitHelp} className="space-y-3">
             {/* Type + Urgency */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label className="text-gray-400 text-xs mb-1 block">I need help with *</label>
+                <label className="text-surface-500 dark:text-gray-400 text-xs mb-1 block">I need help with *</label>
                 <select className="select-field text-sm capitalize"
                   value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
                   {HELP_TYPES.map(t => <option key={t} className="capitalize">{t}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-gray-400 text-xs mb-1 block">How urgent? *</label>
+                <label className="text-surface-500 dark:text-gray-400 text-xs mb-1 block">How urgent? *</label>
                 <select className="select-field text-sm"
                   value={form.urgency} onChange={e => setForm(f => ({ ...f, urgency: e.target.value }))}>
                   <option value="critical">🚨 Critical — right now</option>
@@ -143,7 +143,7 @@ export default function CitizenDashboard() {
 
             {/* Description */}
             <div>
-              <label className="text-gray-400 text-xs mb-1 block">Describe your situation *</label>
+              <label className="text-surface-500 dark:text-gray-400 text-xs mb-1 block">Describe your situation *</label>
               <textarea
                 className="input-field resize-none text-sm"
                 rows={3}
@@ -156,12 +156,12 @@ export default function CitizenDashboard() {
 
             {/* Location */}
             <div>
-              <label className="text-gray-400 text-xs mb-1 flex items-center gap-1.5">
+              <label className="text-surface-500 dark:text-gray-400 text-xs mb-1 flex items-center gap-1.5">
                 <MapPin size={11} /> Your location
                 {locating && <span className="text-primary-400 flex items-center gap-1"><RefreshCw size={9} className="animate-spin" /> detecting...</span>}
                 {form.latitude && !locating && <span className="text-green-400">✓ detected</span>}
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 <input className="input-field text-sm col-span-1" value={form.latitude}
                   onChange={e => setForm(f => ({...f, latitude: e.target.value}))}
                   placeholder="Latitude" />
@@ -175,7 +175,7 @@ export default function CitizenDashboard() {
             </div>
 
             {/* Emergency contacts row */}
-            <div className="flex items-center gap-3 p-2.5 bg-surface-700 rounded-lg text-xs text-gray-400">
+            <div className="flex items-center gap-3 p-2.5 bg-surface-50 dark:bg-surface-700 rounded-lg text-xs text-surface-500 dark:text-gray-400">
               <Phone size={12} className="flex-shrink-0 text-red-400" />
               <span>Emergency? Call directly:</span>
               <a href="tel:108" className="text-primary-400 font-bold hover:underline">108 Ambulance</a>
@@ -197,27 +197,27 @@ export default function CitizenDashboard() {
       {/* ─── Nearby open shelters ─── */}
       <div className="card">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-white font-semibold text-sm flex items-center gap-2">
+          <h3 className="text-surface-900 dark:text-white font-semibold text-sm flex items-center gap-2">
             <Tent size={15} className="text-primary-400" /> Nearest Open Shelters
           </h3>
           <button onClick={() => navigate('/shelters')} className="text-primary-400 text-xs hover:text-primary-300">View all →</button>
         </div>
         {shelters.length === 0 ? (
-          <p className="text-gray-500 text-sm py-4 text-center">Loading shelters...</p>
+          <p className="text-surface-500 dark:text-gray-500 text-sm py-4 text-center">Loading shelters...</p>
         ) : shelters.map(s => {
           const pct = Math.min(100, (s.current_occupancy / s.capacity) * 100);
           return (
-            <div key={s.id} className="flex items-center gap-3 p-2.5 bg-surface-700 rounded-lg mb-2">
+            <div key={s.id} className="flex items-center gap-3 p-2.5 bg-surface-50 dark:bg-surface-700 rounded-lg mb-2">
               <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${pct > 90 ? 'bg-red-500' : 'bg-green-500'}`} />
               <div className="flex-1 min-w-0">
-                <p className="text-white text-xs font-medium truncate">{s.name}</p>
+                <p className="text-surface-900 dark:text-white text-xs font-medium truncate">{s.name}</p>
                 <div className="w-full bg-surface-600 rounded-full h-1.5 mt-1">
                   <div className="h-1.5 rounded-full" style={{ width:`${pct}%`, background: pct>80?'#dc2626':'#16a34a' }} />
                 </div>
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="text-white text-xs font-bold">{s.capacity - s.current_occupancy}</p>
-                <p className="text-gray-500 text-xs">free beds</p>
+                <p className="text-surface-900 dark:text-white text-xs font-bold">{s.capacity - s.current_occupancy}</p>
+                <p className="text-surface-500 dark:text-gray-500 text-xs">free beds</p>
               </div>
               {s.contact_phone && (
                 <a href={`tel:${s.contact_phone}`} className="p-1.5 rounded-lg bg-surface-600 hover:bg-surface-500 transition-colors">
@@ -233,15 +233,15 @@ export default function CitizenDashboard() {
       {myRequests.length > 0 && (
         <div className="card">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-white font-semibold text-sm">My Previous Requests</h3>
+            <h3 className="text-surface-900 dark:text-white font-semibold text-sm">My Previous Requests</h3>
             <button onClick={() => navigate('/help-requests')} className="text-primary-400 text-xs hover:text-primary-300">View all →</button>
           </div>
           <div className="space-y-2">
             {myRequests.map(r => (
-              <div key={r.id} className="flex items-center gap-3 p-2.5 bg-surface-700 rounded-lg">
+              <div key={r.id} className="flex items-center gap-3 p-2.5 bg-surface-50 dark:bg-surface-700 rounded-lg">
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-xs font-medium capitalize">{r.type} assistance</p>
-                  <p className="text-gray-500 text-xs truncate">{r.description}</p>
+                  <p className="text-surface-900 dark:text-white text-xs font-medium capitalize">{r.type} assistance</p>
+                  <p className="text-surface-500 dark:text-gray-500 text-xs truncate">{r.description}</p>
                 </div>
                 <span className={`text-xs px-2 py-0.5 rounded capitalize font-medium flex-shrink-0
                   ${r.status==='fulfilled' ? 'bg-green-900/40 text-green-400' :

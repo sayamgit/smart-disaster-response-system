@@ -65,35 +65,35 @@ function PredictModal({ onClose, onSuccess }) {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-surface-800 border border-surface-600 rounded-2xl w-full max-w-2xl shadow-2xl animate-bounce-in my-4">
-        <div className="p-6 border-b border-surface-700">
-          <h2 className="text-white font-bold text-lg flex items-center gap-2">
+      <div className="bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-600 rounded-2xl w-full max-w-2xl shadow-2xl animate-bounce-in my-4">
+        <div className="p-6 border-b border-surface-200 dark:border-surface-700">
+          <h2 className="text-surface-900 dark:text-white font-bold text-lg flex items-center gap-2">
             <TrendingUp size={20} className="text-primary-400" /> Disaster Risk Analysis
           </h2>
         </div>
         {!result ? (
           <form onSubmit={submit} className="p-6 space-y-4">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label className="text-gray-400 text-sm mb-1 block">Region Name</label>
+                <label className="text-surface-500 dark:text-gray-400 text-sm mb-1 block">Region Name</label>
                 <input className="input-field" value={form.region_name} onChange={e => setForm(f => ({ ...f, region_name: e.target.value }))} placeholder="e.g. Chennai, Tamil Nadu" />
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <div>
-                  <label className="text-gray-400 text-sm mb-1 block">Latitude</label>
+                  <label className="text-surface-500 dark:text-gray-400 text-sm mb-1 block">Latitude</label>
                   <input className="input-field" value={form.latitude} onChange={e => setForm(f => ({ ...f, latitude: e.target.value }))} placeholder="13.08" />
                 </div>
                 <div>
-                  <label className="text-gray-400 text-sm mb-1 block">Longitude</label>
+                  <label className="text-surface-500 dark:text-gray-400 text-sm mb-1 block">Longitude</label>
                   <input className="input-field" value={form.longitude} onChange={e => setForm(f => ({ ...f, longitude: e.target.value }))} placeholder="80.27" />
                 </div>
               </div>
             </div>
-            <p className="text-gray-400 text-sm font-medium">Environmental Data</p>
-            <div className="grid grid-cols-2 gap-3">
+            <p className="text-surface-500 dark:text-gray-400 text-sm font-medium">Environmental Data</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {fields.map(({ key, label, icon: Icon, placeholder }) => (
                 <div key={key}>
-                  <label className="text-gray-400 text-xs mb-1 flex items-center gap-1"><Icon size={12} />{label}</label>
+                  <label className="text-surface-500 dark:text-gray-400 text-xs mb-1 flex items-center gap-1"><Icon size={12} />{label}</label>
                   <input type="number" step="0.1" className="input-field text-sm" value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} placeholder={placeholder} />
                 </div>
               ))}
@@ -107,11 +107,11 @@ function PredictModal({ onClose, onSuccess }) {
           </form>
         ) : (
           <div className="p-6 space-y-5">
-            <h3 className="text-white font-semibold">Risk Analysis Results: {form.region_name}</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <h3 className="text-surface-900 dark:text-white font-semibold">Risk Analysis Results: {form.region_name}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 md:grid-cols-4 gap-3">
               {result.risk_analysis?.filter(r => r.score > 0).map(r => (
                 <div key={r.type} className={`border rounded-xl p-3 text-center ${RISK_BG[r.risk_level]}`}>
-                  <p className="text-xs text-gray-400 capitalize mb-2">{r.type}</p>
+                  <p className="text-xs text-surface-500 dark:text-gray-400 capitalize mb-2">{r.type}</p>
                   <RiskGauge probability={r.probability} risk_level={r.risk_level} />
                 </div>
               ))}
@@ -166,8 +166,8 @@ export default function PredictionsPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white">Disaster Predictions</h1>
-          <p className="text-gray-400 text-sm">{predictions.length} active risk zones</p>
+          <h1 className="text-xl font-bold text-surface-900 dark:text-white">Disaster Predictions</h1>
+          <p className="text-surface-500 dark:text-gray-400 text-sm">{predictions.length} active risk zones</p>
         </div>
         <div className="flex gap-3">
           <button onClick={fetch} className="btn-secondary"><RefreshCw size={15} /></button>
@@ -181,7 +181,7 @@ export default function PredictionsPage() {
       <div className="flex gap-2 flex-wrap">
         {['', 'critical', 'high', 'moderate', 'low'].map(level => (
           <button key={level} onClick={() => setFilter(level)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${filter === level ? 'bg-primary-600 text-white' : 'bg-surface-700 text-gray-400 hover:text-white'}`}>
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${filter === level ? 'bg-primary-600 text-surface-900 dark:text-white' : 'bg-surface-50 dark:bg-surface-700 text-surface-500 dark:text-gray-400 hover:text-surface-900 dark:text-white'}`}>
             {level ? <><span className="inline-block w-2 h-2 rounded-full mr-1.5" style={{ background: RISK_COLORS[level] }} />{level}</> : 'All Levels'}
           </button>
         ))}
@@ -190,7 +190,7 @@ export default function PredictionsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Radar chart */}
         <div className="card">
-          <h3 className="text-white font-semibold mb-4">Risk Radar by Type</h3>
+          <h3 className="text-surface-900 dark:text-white font-semibold mb-4">Risk Radar by Type</h3>
           <ResponsiveContainer width="100%" height={220}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="#334155" />
@@ -203,19 +203,19 @@ export default function PredictionsPage() {
 
         {/* Prediction list */}
         <div className="card lg:col-span-2 space-y-3">
-          <h3 className="text-white font-semibold">Active Risk Zones</h3>
+          <h3 className="text-surface-900 dark:text-white font-semibold">Active Risk Zones</h3>
           {loading ? (
             <div className="flex items-center justify-center py-10"><RefreshCw size={20} className="animate-spin text-primary-400" /></div>
           ) : predictions.length === 0 ? (
-            <p className="text-gray-500 text-sm py-8 text-center">No active predictions</p>
+            <p className="text-surface-500 dark:text-gray-500 text-sm py-8 text-center">No active predictions</p>
           ) : (
             <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
               {predictions.map(p => (
-                <div key={p.id} className={`flex items-center gap-3 p-3 rounded-xl border ${RISK_BG[p.risk_level] || 'bg-surface-700 border-surface-600'}`}>
+                <div key={p.id} className={`flex items-center gap-3 p-3 rounded-xl border ${RISK_BG[p.risk_level] || 'bg-surface-50 dark:bg-surface-700 border-surface-200 dark:border-surface-600'}`}>
                   <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: RISK_COLORS[p.risk_level] }} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-white text-sm font-medium truncate">{p.region_name || `${Number(p.latitude).toFixed(2)}, ${Number(p.longitude).toFixed(2)}`}</p>
-                    <p className="text-gray-400 text-xs capitalize">{p.disaster_type} · {(parseFloat(p.probability)*100).toFixed(0)}% probability</p>
+                    <p className="text-surface-900 dark:text-white text-sm font-medium truncate">{p.region_name || `${Number(p.latitude).toFixed(2)}, ${Number(p.longitude).toFixed(2)}`}</p>
+                    <p className="text-surface-500 dark:text-gray-400 text-xs capitalize">{p.disaster_type} · {(parseFloat(p.probability)*100).toFixed(0)}% probability</p>
                   </div>
                   <span className="text-xs font-medium capitalize flex-shrink-0" style={{ color: RISK_COLORS[p.risk_level] }}>{p.risk_level}</span>
                 </div>

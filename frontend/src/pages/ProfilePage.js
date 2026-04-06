@@ -34,32 +34,32 @@ export default function ProfilePage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-white">Profile Settings</h1>
-        <p className="text-gray-400 text-sm">Manage your account information</p>
+        <h1 className="text-xl font-bold text-surface-900 dark:text-white">Profile Settings</h1>
+        <p className="text-surface-500 dark:text-gray-400 text-sm">Manage your account information</p>
       </div>
 
       <div className="card">
-        <div className="flex items-center gap-4 mb-5 pb-5 border-b border-surface-700">
-          <div className="w-16 h-16 rounded-full bg-primary-700 flex items-center justify-center text-white text-2xl font-bold">
+        <div className="flex items-center gap-4 mb-5 pb-5 border-b border-surface-200 dark:border-surface-700">
+          <div className="w-16 h-16 rounded-full bg-primary-700 flex items-center justify-center text-surface-900 dark:text-white text-2xl font-bold">
             {user?.name?.charAt(0).toUpperCase()}
           </div>
           <div>
-            <p className="text-white font-semibold">{user?.name}</p>
-            <p className="text-gray-400 text-sm">{user?.email}</p>
+            <p className="text-surface-900 dark:text-white font-semibold">{user?.name}</p>
+            <p className="text-surface-500 dark:text-gray-400 text-sm">{user?.email}</p>
             <span className="badge bg-primary-700 text-primary-200 capitalize mt-1">{user?.role}</span>
           </div>
         </div>
         <form onSubmit={updateProfile} className="space-y-4">
           <div>
-            <label className="text-gray-400 text-sm mb-1 block">Display Name</label>
+            <label className="text-surface-500 dark:text-gray-400 text-sm mb-1 block">Display Name</label>
             <input className="input-field" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
           </div>
           <div>
-            <label className="text-gray-400 text-sm mb-1 block">Phone</label>
+            <label className="text-surface-500 dark:text-gray-400 text-sm mb-1 block">Phone</label>
             <input className="input-field" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="+91 XXXXX XXXXX" />
           </div>
           <div>
-            <label className="text-gray-400 text-sm mb-1 block">Address</label>
+            <label className="text-surface-500 dark:text-gray-400 text-sm mb-1 block">Address</label>
             <textarea className="input-field resize-none" rows={2} value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} placeholder="Your address" />
           </div>
           <button type="submit" disabled={saving} className="btn-primary">
@@ -69,14 +69,14 @@ export default function ProfilePage() {
       </div>
 
       <div className="card">
-        <h3 className="text-white font-semibold mb-4">Change Password</h3>
+        <h3 className="text-surface-900 dark:text-white font-semibold mb-4">Change Password</h3>
         <form onSubmit={updatePassword} className="space-y-4">
           <div>
-            <label className="text-gray-400 text-sm mb-1 block">Current Password</label>
+            <label className="text-surface-500 dark:text-gray-400 text-sm mb-1 block">Current Password</label>
             <input type="password" className="input-field" value={pwForm.current_password} onChange={e => setPwForm(f => ({ ...f, current_password: e.target.value }))} required />
           </div>
           <div>
-            <label className="text-gray-400 text-sm mb-1 block">New Password</label>
+            <label className="text-surface-500 dark:text-gray-400 text-sm mb-1 block">New Password</label>
             <input type="password" className="input-field" value={pwForm.new_password} onChange={e => setPwForm(f => ({ ...f, new_password: e.target.value }))} placeholder="At least 6 characters" required />
           </div>
           <button type="submit" className="btn-secondary">Update Password</button>

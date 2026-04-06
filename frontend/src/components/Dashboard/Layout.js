@@ -35,20 +35,31 @@ export default function Layout() {
   const filteredNav = navItems.filter(item => !item.roles || item.roles.includes(user?.role));
 
   return (
-    <div className="flex h-screen overflow-hidden bg-transparent">
-      {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-64' : 'w-16'} flex-shrink-0 glass-panel border-r-0 border-r-white/5 flex flex-col transition-all duration-300 ease-in-out z-20`}>
+    <div className="flex h-screen overflow-hidden bg-transparent relative">
+      
+      {/* Mobile Dim Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-surface-900/40 backdrop-blur-sm z-40 md:hidden transition-opacity"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - adaptive & mobile-ready */}
+      <aside className={`
+        ${sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full md:translate-x-0 md:w-16'} 
+        absolute md:relative inset-y-0 left-0
+        flex-shrink-0 bg-white/70 dark:bg-surface-850/30 md:dark:bg-transparent backdrop-blur-xl border-r border-surface-200 dark:border-white/5 flex flex-col transition-all duration-300 ease-in-out z-50 shadow-2xl md:shadow-none
+      `}>
         {/* Logo */}
-        <div className="flex items-center gap-3 px-4 py-5 border-b border-white/5">
-          <div className="flex-shrink-0 w-8 h-8 bg-danger-600 rounded-lg flex items-center justify-center">
+        <div className={`flex items-center gap-3 px-4 py-5 border-b border-surface-200 dark:border-white/5 ${!sidebarOpen && 'md:justify-center'}`}>
+          <div className="flex-shrink-0 w-8 h-8 bg-danger-600 rounded-lg flex items-center justify-center shadow-sm">
             <Activity size={18} className="text-white" />
           </div>
-          {sidebarOpen && (
-            <div className="overflow-hidden">
-              <p className="text-white font-bold text-sm leading-tight">DisasterWatch</p>
-              <p className="text-gray-500 text-xs">Response System</p>
-            </div>
-          )}
+          <div className={`overflow-hidden transition-all duration-300 ${!sidebarOpen ? 'w-0 opacity-0 hidden md:block md:w-0' : 'w-auto opacity-100'}`}>
+            <p className="text-surface-900 dark:text-white font-bold text-sm leading-tight whitespace-nowrap">DisasterWatch</p>
+            <p className="text-surface-500 dark:text-gray-500 text-[10px] uppercase font-bold tracking-widest whitespace-nowrap">Response System</p>
+          </div>
         </div>
 
         {/* Navigation */}
@@ -58,84 +69,79 @@ export default function Layout() {
             return (
               <button
                 key={path}
-                onClick={() => navigate(path)}
-                className={`w-full ${active ? 'nav-item-active' : 'nav-item'} ${!sidebarOpen ? 'justify-center px-2' : ''}`}
+                onClick={() => { navigate(path); if(window.innerWidth < 768) setSidebarOpen(false); }}
+                className={`w-full ${active ? 'nav-item-active' : 'nav-item'} ${!sidebarOpen ? 'md:justify-center' : ''}`}
                 title={!sidebarOpen ? label : ''}
               >
                 <Icon size={18} className="flex-shrink-0" />
-                {sidebarOpen && <span className="text-sm font-medium truncate">{label}</span>}
-                {active && sidebarOpen && <ChevronRight size={14} className="ml-auto opacity-60" />}
+                <span className={`text-sm font-medium truncate transition-all duration-300 ${!sidebarOpen ? 'w-0 hidden md:inline-block md:w-0 md:opacity-0' : 'w-auto opacity-100'}`}>{label}</span>
+                {active && sidebarOpen && <ChevronRight size={14} className="ml-auto opacity-60 flex-shrink-0" />}
               </button>
             );
           })}
         </nav>
 
         {/* User profile at bottom */}
-        <div className="border-t border-white/5 p-3">
-          {sidebarOpen ? (
-            <div className="flex items-center gap-3 px-2 py-2">
-              <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                {user?.name?.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-white text-sm font-medium truncate">{user?.name}</p>
-                <p className="text-gray-500 text-xs capitalize">{user?.role}</p>
-              </div>
+        <div className="border-t border-surface-200 dark:border-white/5 p-3">
+          <div className={`flex items-center gap-3 px-2 py-2 ${!sidebarOpen ? 'md:justify-center' : ''}`}>
+            <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-sm border border-white/10">
+              {user?.name?.charAt(0).toUpperCase()}
             </div>
-          ) : (
-            <div className="flex justify-center py-1">
-              <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-sm font-bold">
-                {user?.name?.charAt(0).toUpperCase()}
-              </div>
+            <div className={`flex-1 min-w-0 transition-all duration-300 ${!sidebarOpen ? 'w-0 hidden md:inline-block md:w-0 md:opacity-0' : 'w-auto opacity-100'}`}>
+              <p className="text-surface-900 dark:text-white text-sm font-medium truncate">{user?.name}</p>
+              <p className="text-surface-500 dark:text-gray-500 text-xs capitalize">{user?.role}</p>
             </div>
-          )}
-          <button onClick={logout} className={`w-full nav-item text-danger-400 hover:text-danger-300 mt-1 ${!sidebarOpen ? 'justify-center px-2' : ''}`}>
-            <LogOut size={16} />
-            {sidebarOpen && <span className="text-sm">Logout</span>}
+          </div>
+          
+          <button onClick={logout} className={`w-full nav-item text-danger-500 dark:text-danger-400 hover:text-danger-600 dark:hover:text-danger-300 mt-1 ${!sidebarOpen ? 'md:justify-center' : ''}`}>
+            <LogOut size={16} className="flex-shrink-0" />
+            <span className={`text-sm transition-all duration-300 ${!sidebarOpen ? 'w-0 hidden md:inline-block md:w-0 md:opacity-0' : 'w-auto opacity-100'}`}>Logout</span>
           </button>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10 bg-surface-50/50 dark:bg-transparent">
         {/* Top bar */}
-        <header className="glass-panel rounded-b-2xl border-x-0 border-t-0 border-b-white/5 px-4 py-3 flex items-center gap-4 flex-shrink-0 mx-4 mt-2">
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray-400 hover:text-white p-1.5 rounded-xl hover:bg-surface-700/50 transition-colors">
+        <header className="bg-white/80 dark:bg-surface-850/50 backdrop-blur-xl rounded-b-2xl border border-surface-200 dark:border-white/5 border-t-0 px-3 md:px-4 py-2.5 md:py-3 flex items-center gap-3 md:gap-4 flex-shrink-0 mx-2 md:mx-4 mt-1 md:mt-2 shadow-sm dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-surface-500 dark:text-gray-400 hover:text-surface-900 dark:hover:text-white p-1.5 rounded-xl hover:bg-surface-100 dark:hover:bg-surface-700/50 transition-colors">
             {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
 
-          <div className="flex-1">
-            <h1 className="text-white font-semibold text-sm">
-              {filteredNav.find(n => n.path === location.pathname)?.label || 'Dashboard'}
+          <div className="flex-1 min-w-0">
+            <h1 className="text-surface-900 dark:text-white font-bold text-sm md:text-base truncate">
+              {filteredNav.find(n => n.path === location.pathname)?.label || (location.pathname === '/settings' ? 'System Settings' : 'Dashboard')}
             </h1>
           </div>
 
           {/* Status indicator */}
-          <div className="flex items-center gap-2 text-xs text-success-400">
-            <span className="w-2 h-2 rounded-full bg-success-400 animate-pulse-slow" />
+          <div className="flex items-center gap-2 text-[10px] md:text-xs text-success-600 dark:text-success-400 font-bold tracking-wider uppercase">
+            <span className="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-success-500 dark:bg-success-400 animate-pulse-slow shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
             <span className="hidden sm:block">System Online</span>
           </div>
+
+          <div className="h-6 w-px bg-surface-200 dark:bg-white/10 hidden md:block"></div>
 
           {/* Notifications bell */}
           <button
             onClick={() => setNotifOpen(!notifOpen)}
-            className="relative p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-700 transition-colors"
+            className="relative p-2 rounded-lg text-surface-500 dark:text-gray-400 hover:text-surface-900 dark:hover:text-white hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors"
           >
             <Bell size={18} />
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 w-4 h-4 bg-danger-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+              <span className="absolute top-1 right-1 w-4 h-4 bg-danger-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold border-2 border-white dark:border-surface-850">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </button>
 
-          <button onClick={() => navigate('/profile')} className="p-1.5 rounded-lg hover:bg-surface-700 transition-colors">
-            <Settings size={18} className="text-gray-400 hover:text-white" />
+          <button onClick={() => navigate('/settings')} title="Settings" className="p-1.5 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors group">
+            <Settings size={18} className="text-surface-500 dark:text-gray-400 group-hover:text-surface-900 dark:group-hover:text-white transition-colors" />
           </button>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 custom-scrollbar">
           <Outlet />
         </main>
       </div>

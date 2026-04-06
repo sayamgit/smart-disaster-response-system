@@ -11,8 +11,8 @@ const CHART_COLORS = ['#3b82f6','#ef4444','#f59e0b','#10b981','#8b5cf6','#ec4899
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-surface-700 border border-surface-600 rounded-xl p-3 shadow-xl text-sm">
-      <p className="text-gray-400 mb-1">{label}</p>
+    <div className="bg-surface-50 dark:bg-surface-700 border border-surface-200 dark:border-surface-600 rounded-xl p-3 shadow-xl text-sm">
+      <p className="text-surface-500 dark:text-gray-400 mb-1">{label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color }} className="font-medium">{p.name}: {p.value}</p>
       ))}
@@ -33,9 +33,9 @@ function StatCard({ icon: Icon, label, value, sub, color }) {
       <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 ${colors[color]}`}>
         <Icon size={18} />
       </div>
-      <p className="text-2xl font-bold text-white">{value ?? '—'}</p>
-      <p className="text-gray-400 text-sm mt-0.5">{label}</p>
-      {sub && <p className="text-xs text-gray-500 mt-1">{sub}</p>}
+      <p className="text-2xl font-bold text-surface-900 dark:text-white">{value ?? '—'}</p>
+      <p className="text-surface-500 dark:text-gray-400 text-sm mt-0.5">{label}</p>
+      {sub && <p className="text-xs text-surface-500 dark:text-gray-500 mt-1">{sub}</p>}
     </div>
   );
 }
@@ -67,11 +67,11 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2">
             <Shield size={18} className="text-purple-400" />
             Admin Overview — Whole Country
           </h1>
-          <p className="text-gray-400 text-sm flex items-center gap-1.5 mt-0.5">
+          <p className="text-surface-500 dark:text-gray-400 text-sm flex items-center gap-1.5 mt-0.5">
             <Clock size={12} /> Last updated just now
           </p>
         </div>
@@ -82,13 +82,13 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={AlertTriangle} label="Active Incidents"      value={s.incidents?.open}      sub={`${s.incidents?.critical||0} critical`}         color="danger" />
         <StatCard icon={Users}         label="Volunteers Available"  value={s.volunteers?.available} sub={`${s.volunteers?.on_mission||0} on mission`}    color="success" />
         <StatCard icon={Tent}          label="Open Shelters"         value={s.shelters?.open}        sub={`${s.shelters?.total_occupied||0}/${s.shelters?.total_capacity||0} beds`} color="primary" />
         <StatCard icon={Heart}     label="Pending Help Requests" value={s.help_requests?.pending} sub={`${s.help_requests?.critical||0} critical`}    color="warning" />
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={TrendingUp}    label="Active Risk Zones"     value={s.predictions?.total}   sub={`${s.predictions?.critical||0} critical`}        color="danger" />
         <StatCard icon={AlertTriangle} label="In Progress"           value={s.incidents?.in_progress} sub={`${s.incidents?.last_24h||0} last 24h`}       color="warning" />
         <StatCard icon={Users}         label="Total Volunteers"      value={s.volunteers?.total}                                                           color="success" />
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div className="card lg:col-span-2">
-          <h3 className="text-white font-semibold mb-4 text-sm">Incident trend — last 7 days</h3>
+          <h3 className="text-surface-900 dark:text-white font-semibold mb-4 text-sm">Incident trend — last 7 days</h3>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={c.incident_trend || []}>
               <defs>
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
         </div>
 
         <div className="card">
-          <h3 className="text-white font-semibold mb-4 text-sm">Incidents by type</h3>
+          <h3 className="text-surface-900 dark:text-white font-semibold mb-4 text-sm">Incidents by type</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie data={c.disaster_types || []} dataKey="count" nameKey="type" cx="50%" cy="50%" outerRadius={75}
@@ -137,8 +137,8 @@ export default function AdminDashboard() {
 
       {/* Quick actions */}
       <div className="card">
-        <h3 className="text-white font-semibold text-sm mb-3">Quick actions</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <h3 className="text-surface-900 dark:text-white font-semibold text-sm mb-3">Quick actions</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 md:grid-cols-4 gap-3">
           {[
             { label:'Manage Incidents',  path:'/incidents',      color:'bg-red-900/30 hover:bg-red-900/50 border-red-800',     icon:'🚨' },
             { label:'Assign Volunteers', path:'/volunteers',     color:'bg-orange-900/30 hover:bg-orange-900/50 border-orange-800', icon:'🦺' },
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
             <button key={path} onClick={() => navigate(path)}
               className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-colors ${color}`}>
               <span className="text-2xl">{icon}</span>
-              <span className="text-white text-xs font-medium text-center">{label}</span>
+              <span className="text-surface-900 dark:text-white text-xs font-medium text-center">{label}</span>
             </button>
           ))}
         </div>

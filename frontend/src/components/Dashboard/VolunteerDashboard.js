@@ -91,15 +91,15 @@ export default function VolunteerDashboard() {
     </div>
   );
 
-  const availColor = { available:'text-green-400', on_mission:'text-yellow-400', busy:'text-orange-400', unavailable:'text-gray-400' };
+  const availColor = { available:'text-green-400', on_mission:'text-yellow-400', busy:'text-orange-400', unavailable:'text-surface-500 dark:text-gray-400' };
 
   return (
     <div className="space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-bold text-white">Hello, {user?.name?.split(' ')[0]} 🦺</h1>
-          <p className="text-gray-400 text-sm">
+          <h1 className="text-xl font-bold text-surface-900 dark:text-white">Hello, {user?.name?.split(' ')[0]} 🦺</h1>
+          <p className="text-surface-500 dark:text-gray-400 text-sm">
             {myPos ? `Your position detected · ` : ''}
             {sortedTasks.length} open tasks near you
           </p>
@@ -110,7 +110,7 @@ export default function VolunteerDashboard() {
               ● {profile.availability?.replace('_',' ')}
             </span>
             <select
-              className="text-xs bg-surface-700 border border-surface-600 rounded-lg px-2 py-1.5 text-gray-300 outline-none"
+              className="text-xs bg-surface-50 dark:bg-surface-700 border border-surface-200 dark:border-surface-600 rounded-lg px-2 py-1.5 text-surface-600 dark:text-gray-300 outline-none"
               value={profile.availability}
               onChange={e => updateStatus(e.target.value)}
             >
@@ -124,30 +124,30 @@ export default function VolunteerDashboard() {
 
       {/* Stats */}
       {profile && (
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="card text-center py-3">
-            <p className="text-2xl font-bold text-white">{profile.missions_completed}</p>
-            <p className="text-gray-400 text-xs mt-1">Missions done</p>
+            <p className="text-2xl font-bold text-surface-900 dark:text-white">{profile.missions_completed}</p>
+            <p className="text-surface-500 dark:text-gray-400 text-xs mt-1">Missions done</p>
           </div>
           <div className="card text-center py-3">
             <p className="text-2xl font-bold text-yellow-400">{sortedTasks.length}</p>
-            <p className="text-gray-400 text-xs mt-1">Open tasks nearby</p>
+            <p className="text-surface-500 dark:text-gray-400 text-xs mt-1">Open tasks nearby</p>
           </div>
           <div className="card text-center py-3">
             <p className="text-2xl font-bold text-green-400">⭐ {profile.rating}</p>
-            <p className="text-gray-400 text-xs mt-1">Your rating</p>
+            <p className="text-surface-500 dark:text-gray-400 text-xs mt-1">Your rating</p>
           </div>
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-2 gap-5">
 
         {/* Open incidents — sorted nearest first */}
         <div className="card space-y-2">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="text-white font-semibold text-sm flex items-center gap-2">
+            <h3 className="text-surface-900 dark:text-white font-semibold text-sm flex items-center gap-2">
               <AlertTriangle size={14} className="text-orange-400" />
-              Open Tasks {myPos && <span className="text-gray-500 font-normal text-xs">— nearest first</span>}
+              Open Tasks {myPos && <span className="text-surface-500 dark:text-gray-500 font-normal text-xs">— nearest first</span>}
             </h3>
             <button onClick={() => navigate('/incidents')} className="text-primary-400 text-xs">View all →</button>
           </div>
@@ -155,17 +155,17 @@ export default function VolunteerDashboard() {
           {sortedTasks.length === 0 ? (
             <div className="text-center py-8">
               <CheckCircle size={24} className="text-green-400 mx-auto mb-2" />
-              <p className="text-gray-400 text-sm">No open tasks right now</p>
+              <p className="text-surface-500 dark:text-gray-400 text-sm">No open tasks right now</p>
             </div>
           ) : sortedTasks.map(task => (
             <div key={task.id} className={`rounded-xl p-3 ${SEV_STYLE[task.severity] || ''}`}>
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm font-medium truncate">{task.title}</p>
+                  <p className="text-surface-900 dark:text-white text-sm font-medium truncate">{task.title}</p>
                   <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                    <span className="text-gray-400 text-xs capitalize">{task.type}</span>
+                    <span className="text-surface-500 dark:text-gray-400 text-xs capitalize">{task.type}</span>
                     {task.location_name && (
-                      <span className="text-gray-500 text-xs flex items-center gap-0.5">
+                      <span className="text-surface-500 dark:text-gray-500 text-xs flex items-center gap-0.5">
                         <MapPin size={10} />{task.location_name}
                       </span>
                     )}
@@ -182,7 +182,7 @@ export default function VolunteerDashboard() {
                 </span>
               </div>
               {task.affected_count > 0 && (
-                <p className="text-gray-400 text-xs mb-2">👥 {task.affected_count.toLocaleString()} people affected</p>
+                <p className="text-surface-500 dark:text-gray-400 text-xs mb-2">👥 {task.affected_count.toLocaleString()} people affected</p>
               )}
               <button onClick={() => acceptTask(task.id)} className="w-full btn-primary text-xs py-1.5 justify-center">
                 <CheckCircle size={12} /> Accept Task
@@ -194,28 +194,28 @@ export default function VolunteerDashboard() {
         {/* Pending help requests */}
         <div className="card space-y-2">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="text-white font-semibold text-sm">Pending Help Requests</h3>
+            <h3 className="text-surface-900 dark:text-white font-semibold text-sm">Pending Help Requests</h3>
             <button onClick={() => navigate('/help-requests')} className="text-primary-400 text-xs">View all →</button>
           </div>
 
           {helpReqs.length === 0 ? (
             <div className="text-center py-8">
               <CheckCircle size={24} className="text-green-400 mx-auto mb-2" />
-              <p className="text-gray-400 text-sm">All help requests are assigned</p>
+              <p className="text-surface-500 dark:text-gray-400 text-sm">All help requests are assigned</p>
             </div>
           ) : helpReqs.slice(0, 6).map(req => (
-            <div key={req.id} className={`rounded-xl p-3 ${req.urgency==='critical'?'border border-red-700 bg-red-900/10':'bg-surface-700'}`}>
+            <div key={req.id} className={`rounded-xl p-3 ${req.urgency==='critical'?'border border-red-700 bg-red-900/10':'bg-surface-50 dark:bg-surface-700'}`}>
               <div className="flex items-start justify-between gap-2 mb-1">
                 <div>
-                  <p className="text-white text-xs font-medium capitalize">{req.type} assistance</p>
-                  <p className="text-gray-500 text-xs">{req.requester_name} · {req.location_name || 'Location unknown'}</p>
+                  <p className="text-surface-900 dark:text-white text-xs font-medium capitalize">{req.type} assistance</p>
+                  <p className="text-surface-500 dark:text-gray-500 text-xs">{req.requester_name} · {req.location_name || 'Location unknown'}</p>
                 </div>
                 <span className={`text-xs px-1.5 py-0.5 rounded font-medium capitalize flex-shrink-0
                   ${req.urgency==='critical'?'bg-red-900/40 text-red-400':req.urgency==='high'?'bg-orange-900/40 text-orange-400':'bg-yellow-900/40 text-yellow-400'}`}>
                   {req.urgency}
                 </span>
               </div>
-              <p className="text-gray-400 text-xs mb-2 line-clamp-1">{req.description}</p>
+              <p className="text-surface-500 dark:text-gray-400 text-xs mb-2 line-clamp-1">{req.description}</p>
               <button onClick={() => respondHelp(req.id)} className="w-full btn-primary text-xs py-1.5 justify-center">
                 Respond to Request
               </button>

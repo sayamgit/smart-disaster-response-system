@@ -8,7 +8,7 @@ const RISK_STYLES = {
   high:     { bg: 'bg-orange-900/30 border-orange-700', text: 'text-orange-400', icon: '⚠️', label: 'High Risk' },
   moderate: { bg: 'bg-yellow-900/30 border-yellow-700', text: 'text-yellow-400', icon: '⚡', label: 'Moderate Risk' },
   low:      { bg: 'bg-green-900/30 border-green-700',  text: 'text-green-400',  icon: '✅', label: 'Low Risk / Safe' },
-  unknown:  { bg: 'bg-surface-700 border-surface-600', text: 'text-gray-400',   icon: '📍', label: 'No Data' },
+  unknown:  { bg: 'bg-surface-50 dark:bg-surface-700 border-surface-200 dark:border-surface-600', text: 'text-surface-500 dark:text-gray-400',   icon: '📍', label: 'No Data' },
 };
 
 // Safety tips per disaster type
@@ -70,7 +70,7 @@ function TipSection({ title, tips, color }) {
     <div className="space-y-1.5">
       <p className={`text-xs font-semibold uppercase tracking-wide ${color}`}>{title}</p>
       {tips.map((tip, i) => (
-        <div key={i} className="flex items-start gap-2 text-sm text-gray-300">
+        <div key={i} className="flex items-start gap-2 text-sm text-surface-600 dark:text-gray-300">
           <CheckCircle size={13} className="text-green-400 flex-shrink-0 mt-0.5" />
           <span>{tip}</span>
         </div>
@@ -183,10 +183,10 @@ export default function SafetyAdvisoryPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2">
             <Shield size={20} className="text-primary-400" /> Safety Advisory
           </h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-surface-500 dark:text-gray-400 text-sm mt-1">
             Personalised risk analysis based on your current location
           </p>
         </div>
@@ -203,8 +203,8 @@ export default function SafetyAdvisoryPage() {
           <div className="flex items-center gap-3">
             <AlertTriangle size={20} className="text-red-400 flex-shrink-0" />
             <div>
-              <p className="text-white font-semibold text-sm">Location Access Required</p>
-              <p className="text-gray-400 text-sm mt-0.5">{locError}</p>
+              <p className="text-surface-900 dark:text-white font-semibold text-sm">Location Access Required</p>
+              <p className="text-surface-500 dark:text-gray-400 text-sm mt-0.5">{locError}</p>
               <button onClick={getLocation} className="btn-primary mt-3 text-sm">
                 <MapPin size={13} /> Try Again
               </button>
@@ -215,13 +215,13 @@ export default function SafetyAdvisoryPage() {
         <div className="card border-primary-700 bg-primary-900/20">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-primary-700 flex items-center justify-center flex-shrink-0">
-              <MapPin size={16} className="text-white" />
+              <MapPin size={16} className="text-surface-900 dark:text-white" />
             </div>
             <div>
-              <p className="text-white font-semibold text-sm">
+              <p className="text-surface-900 dark:text-white font-semibold text-sm">
                 Your location: {regionName || 'Detecting area...'}
               </p>
-              <p className="text-gray-400 text-xs mt-0.5">
+              <p className="text-surface-500 dark:text-gray-400 text-xs mt-0.5">
                 {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
               </p>
             </div>
@@ -234,7 +234,7 @@ export default function SafetyAdvisoryPage() {
       ) : (
         <div className="card flex items-center gap-3">
           <RefreshCw size={18} className="animate-spin text-primary-400 flex-shrink-0" />
-          <p className="text-gray-400 text-sm">Detecting your location...</p>
+          <p className="text-surface-500 dark:text-gray-400 text-sm">Detecting your location...</p>
         </div>
       )}
 
@@ -246,13 +246,13 @@ export default function SafetyAdvisoryPage() {
               <div className="text-4xl">{topStyle.icon}</div>
               <div className="flex-1">
                 <p className={`text-lg font-bold ${topStyle.text}`}>{topStyle.label}</p>
-                <p className="text-white text-sm mt-0.5">
+                <p className="text-surface-900 dark:text-white text-sm mt-0.5">
                   {topRisk
                     ? `${topRisk.disaster_type.charAt(0).toUpperCase() + topRisk.disaster_type.slice(1)} risk detected near ${regionName}`
                     : `No active disaster risks detected near ${regionName}`}
                 </p>
                 {topRisk && (
-                  <p className="text-gray-400 text-xs mt-1">
+                  <p className="text-surface-500 dark:text-gray-400 text-xs mt-1">
                     Probability: {(parseFloat(topRisk.probability) * 100).toFixed(0)}% ·
                     Based on latest environmental data
                   </p>
@@ -264,13 +264,13 @@ export default function SafetyAdvisoryPage() {
           {/* All nearby risks */}
           {risks.length > 1 && (
             <div className="card">
-              <h3 className="text-white font-semibold mb-3 text-sm">All risks near you</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <h3 className="text-surface-900 dark:text-white font-semibold mb-3 text-sm">All risks near you</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 md:grid-cols-4 gap-3">
                 {risks.slice(0, 4).map((r, i) => {
                   const s = RISK_STYLES[r.risk_level];
                   return (
                     <div key={i} className={`rounded-xl border p-3 text-center ${s.bg}`}>
-                      <p className="text-xs text-gray-400 capitalize mb-1">{r.disaster_type}</p>
+                      <p className="text-xs text-surface-500 dark:text-gray-400 capitalize mb-1">{r.disaster_type}</p>
                       <p className={`text-lg font-bold ${s.text}`}>
                         {(parseFloat(r.probability) * 100).toFixed(0)}%
                       </p>
@@ -285,20 +285,20 @@ export default function SafetyAdvisoryPage() {
           {/* Nearby open incidents */}
           {nearbyInc.length > 0 && (
             <div className="card border-orange-700 bg-orange-900/10">
-              <h3 className="text-white font-semibold mb-3 text-sm flex items-center gap-2">
+              <h3 className="text-surface-900 dark:text-white font-semibold mb-3 text-sm flex items-center gap-2">
                 <AlertTriangle size={15} className="text-orange-400" />
                 Active incidents within 50 km of you
               </h3>
               <div className="space-y-2">
                 {nearbyInc.map(inc => (
-                  <div key={inc.id} className="flex items-center gap-3 p-2.5 bg-surface-700 rounded-lg">
+                  <div key={inc.id} className="flex items-center gap-3 p-2.5 bg-surface-50 dark:bg-surface-700 rounded-lg">
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
                       inc.severity === 'critical' ? 'bg-red-500' :
                       inc.severity === 'high'     ? 'bg-orange-500' : 'bg-yellow-500'
                     }`} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-white text-xs font-medium truncate">{inc.title}</p>
-                      <p className="text-gray-400 text-xs capitalize">{inc.type} · {inc.location_name || 'Nearby'}</p>
+                      <p className="text-surface-900 dark:text-white text-xs font-medium truncate">{inc.title}</p>
+                      <p className="text-surface-500 dark:text-gray-400 text-xs capitalize">{inc.type} · {inc.location_name || 'Nearby'}</p>
                     </div>
                     <span className={`text-xs px-2 py-0.5 rounded font-medium capitalize
                       ${inc.severity === 'critical' ? 'bg-red-900/40 text-red-400' :
@@ -315,7 +315,7 @@ export default function SafetyAdvisoryPage() {
           {/* Safety tips for top risk */}
           {topTips && (
             <div className="card">
-              <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+              <h3 className="text-surface-900 dark:text-white font-semibold mb-4 flex items-center gap-2">
                 <span className="text-xl">{topTips.icon}</span>
                 {topTips.title} — What you should do
               </h3>
@@ -330,13 +330,13 @@ export default function SafetyAdvisoryPage() {
           {/* No risk — general tips */}
           {!topRisk && (
             <div className="card border-green-700 bg-green-900/10">
-              <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+              <h3 className="text-surface-900 dark:text-white font-semibold mb-3 flex items-center gap-2">
                 <CheckCircle size={16} className="text-green-400" />
                 Your area looks safe — general preparedness tips
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {['Keep an emergency kit with water, food and torch','Save emergency numbers in your phone','Know your nearest shelter location','Have a family emergency communication plan','Follow local government alerts and social media'].map((tip, i) => (
-                  <div key={i} className="flex items-start gap-2 text-sm text-gray-300">
+                  <div key={i} className="flex items-start gap-2 text-sm text-surface-600 dark:text-gray-300">
                     <CheckCircle size={13} className="text-green-400 flex-shrink-0 mt-0.5" />
                     {tip}
                   </div>
@@ -347,16 +347,16 @@ export default function SafetyAdvisoryPage() {
 
           {/* Emergency contacts */}
           <div className="card">
-            <h3 className="text-white font-semibold mb-3 text-sm flex items-center gap-2">
+            <h3 className="text-surface-900 dark:text-white font-semibold mb-3 text-sm flex items-center gap-2">
               <Phone size={14} className="text-primary-400" /> Emergency Contacts
             </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 md:grid-cols-3 gap-2">
               {EMERGENCY_CONTACTS.map((c, i) => (
                 <a key={i} href={`tel:${c.number}`}
-                  className="flex items-center gap-2 p-2.5 bg-surface-700 hover:bg-surface-600 rounded-lg transition-colors cursor-pointer">
+                  className="flex items-center gap-2 p-2.5 bg-surface-50 dark:bg-surface-700 hover:bg-surface-600 rounded-lg transition-colors cursor-pointer">
                   <span className="text-lg">{c.icon}</span>
                   <div>
-                    <p className="text-white text-xs font-medium">{c.name}</p>
+                    <p className="text-surface-900 dark:text-white text-xs font-medium">{c.name}</p>
                     <p className="text-primary-400 text-xs font-bold">{c.number}</p>
                   </div>
                 </a>

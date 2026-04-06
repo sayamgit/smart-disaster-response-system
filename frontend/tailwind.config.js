@@ -6,9 +6,12 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          50: '#fdf4ff', 100: '#fae8ff', 200: '#f5d0fe', 300: '#e879f9',
-          400: '#d946ef', 500: '#c026d3', 600: '#a21caf', 700: '#86198f',
-          800: '#701a75', 900: '#4a044e', // Neon Magenta/Purple tones
+          50: '#ecfeff', 100: '#cffafe', 200: '#a5f3fc', 300: '#67e8f9',
+          400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 700: '#0e7490',
+          800: '#155e75', 900: '#164e63', // Cyan/Teal accents
+        },
+        secondary: {
+          400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb' // Blue accent
         },
         danger: { 50: '#fff1f2', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c' },
         warning: { 50: '#fffbeb', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
@@ -16,23 +19,25 @@ module.exports = {
         surface: {
           50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1',
           400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155',
-          800: '#1e293b', 850: '#151f2f', 900: '#020617', // Very deep slate/black
+          800: '#1e293b', 850: '#111827', 900: '#0B1220', // Navy / Slate tones
         }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace']
       },
-      backgroundImage: {
-        'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%)',
-      },
       boxShadow: {
-        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
-        'glass-hover': '0 12px 40px 0 rgba(192, 38, 211, 0.15)',
-        'neon-primary': '0 0 10px rgba(192, 38, 211, 0.5), 0 0 20px rgba(192, 38, 211, 0.3)',
+        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.2)',
+        'cyan-glow': '0 4px 14px 0 rgba(6, 182, 212, 0.3)',
+      },
+      keyframes: {
+        floatLeft: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-15px)' },
+        }
       },
       animation: {
-        'pulse-slow': 'pulse 4s cubic-bezier(0.4,0,0.6,1) infinite',
+        'float': 'floatLeft 8s ease-in-out infinite',
       }
     }
   },
