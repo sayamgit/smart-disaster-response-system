@@ -1,8 +1,9 @@
-services:
+databases:
   # 1. Managed PostgreSQL Database
-  - type: psql
-    name: disaster-db
+  - name: disaster-db
     plan: free
+
+services:
 
   # 2. Node.js Backend API
   - type: web
