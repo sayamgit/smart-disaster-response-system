@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 
 async function seed() {
   await connectPostgres();
-  await connectMongo();
+  // await connectMongo(); // Disabled for Render-only deployment
   console.log('🌱 Seeding database...');
 
   // Seed users
@@ -87,11 +87,11 @@ async function seed() {
   `);
 
   // Seed MongoDB alerts
-  await Alert.insertMany([
-    { type: 'disaster_alert', severity: 'critical', title: '🚨 Cyclone Michaung: Critical Flood Warning', message: 'Velachery and surrounding areas face critical flood risk. Evacuation in progress.', target_roles: ['all'], created_by: 'system' },
-    { type: 'prediction_warning', severity: 'warning', title: '⚠️ High Cyclone Risk: Trichy Coast', message: 'Cyclone landfall predicted within 48 hours near Trichy coastal belt.', target_roles: ['all'], created_by: 'system' },
-    { type: 'volunteer_task', severity: 'info', title: 'New Rescue Task Available', message: 'Flooding incident in Velachery requires immediate volunteer response.', target_roles: ['volunteer'], created_by: 'system' }
-  ]).catch(() => {});
+  // await Alert.insertMany([
+  //   { type: 'disaster_alert', severity: 'critical', title: '🚨 Cyclone Michaung: Critical Flood Warning', message: 'Velachery and surrounding areas face critical flood risk. Evacuation in progress.', target_roles: ['all'], created_by: 'system' },
+  //   { type: 'prediction_warning', severity: 'warning', title: '⚠️ High Cyclone Risk: Trichy Coast', message: 'Cyclone landfall predicted within 48 hours near Trichy coastal belt.', target_roles: ['all'], created_by: 'system' },
+  //   { type: 'volunteer_task', severity: 'info', title: 'New Rescue Task Available', message: 'Flooding incident in Velachery requires immediate volunteer response.', target_roles: ['volunteer'], created_by: 'system' }
+  // ]).catch(() => {});
 
   console.log('✅ Seed complete!');
   console.log('');
