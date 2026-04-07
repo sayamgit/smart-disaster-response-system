@@ -101,8 +101,8 @@ const PORT = process.env.PORT || 5000;
 async function startServer() {
   try {
     await connectPostgres();
-    await connectMongo();
-    await connectRedis();
+    try { await connectMongo(); } catch(e) { logger.error('Mongo disabled for this environment'); }
+    try { await connectRedis(); } catch(e) { logger.error('Redis disabled for this environment'); }
     server.listen(PORT, () => {
       logger.info(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
       startAlertScheduler(io);
