@@ -101,8 +101,9 @@ const PORT = process.env.PORT || 5000;
 async function startServer() {
   try {
     await connectPostgres();
-    try { await connectMongo(); } catch(e) { logger.error('Mongo disabled for this environment'); }
-    try { await connectRedis(); } catch(e) { logger.error('Redis disabled for this environment'); }
+    // Mongo and Redis deliberately disabled to prevent deployment hang on Render free tier
+    // try { await connectMongo(); } catch(e) { logger.error('Mongo disabled'); }
+    // try { await connectRedis(); } catch(e) { logger.error('Redis disabled'); }
     server.listen(PORT, () => {
       logger.info(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
       startAlertScheduler(io);
