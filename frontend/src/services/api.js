@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+const rawUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const apiUrl = rawUrl.endsWith('/api') ? rawUrl : `${rawUrl}/api`;
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  baseURL: apiUrl,
   timeout: 15000,
   headers: { 'Content-Type': 'application/json' }
 });
@@ -27,7 +30,7 @@ api.interceptors.response.use(
       if (refreshToken) {
         try {
           const res = await axios.post(
-            `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/auth/refresh`,
+            `${apiUrl}/auth/refresh`,
             { refreshToken }
           );
           const { accessToken } = res.data.data;
