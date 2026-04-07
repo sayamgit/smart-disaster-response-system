@@ -32,7 +32,7 @@ const server = http.createServer(app);
 
 // WebSocket server
 const io = new Server(server, {
-  cors: { origin: process.env.FRONTEND_URL || 'http://localhost:3000', methods: ['GET', 'POST'] }
+  cors: { origin: true, methods: ['GET', 'POST'], credentials: true }
 });
 
 // Attach io to app for use in controllers
@@ -40,7 +40,7 @@ app.set('io', io);
 
 // Security middleware
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
