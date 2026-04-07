@@ -1,16 +1,25 @@
 const { Pool } = require('pg');
 const logger = require('./logger');
 
+const poolConfig = process.env.DATABASE_URL
+  ? {
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false } // Required by Render Managed DBs
+    }
+  : {
+      host: process.env.POSTGRES_HOST || 'localhost',
+      port: parseInt(process.env.POSTGRES_PORT) || 5432,
+      database: process.env.POSTGRES_DB || 'disaster_db',
+      user: process.env.POSTGRES_USER || 'disaster_user',
+      password: process.env.POSTGRES_PASSWORD,
+      ssl: process.env.POSTGRES_SSL === 'true' ? { rejectUnauthorized: false } : false
+    };
+
 const pool = new Pool({
-  host: process.env.POSTGRES_HOST || 'localhost',
-  port: parseInt(process.env.POSTGRES_PORT) || 5432,
-  database: process.env.POSTGRES_DB || 'disaster_db',
-  user: process.env.POSTGRES_USER || 'disaster_user',
-  password: process.env.POSTGRES_PASSWORD,
+  ...poolConfig,
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
-  ssl: process.env.POSTGRES_SSL === 'true' ? { rejectUnauthorized: false } : false
 });
 
 pool.on('error', (err) => {
