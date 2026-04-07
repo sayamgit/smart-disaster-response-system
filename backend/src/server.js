@@ -105,8 +105,8 @@ async function startServer() {
     
     // Auto-seed for Render zero-touch deployments
     const res = await pool.query('SELECT count(*) FROM users');
-    if (parseInt(res.rows[0].count) === 0) {
-      logger.info('Empty production database detected. Auto-seeding mock data...');
+    if (parseInt(res.rows[0].count) < 3) {
+      logger.info('Missing core mock data detected. Auto-seeding...');
       const { seed } = require('./config/seed');
       await seed();
     }
